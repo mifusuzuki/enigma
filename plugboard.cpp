@@ -49,7 +49,7 @@ int PlugBoard::m_load_config()
     for (; index < m_raw_data.size(); index++)
     {
         /* check no greater than 26 inputs */
-        if (index > 26)
+        if (index > 25)
         {
             print_error_message(INCORRECT_NUMBER_OF_PLUGBOARD_PARAMETERS);
             return INCORRECT_NUMBER_OF_PLUGBOARD_PARAMETERS;
