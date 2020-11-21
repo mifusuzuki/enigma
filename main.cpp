@@ -52,8 +52,6 @@ int main(int argc, char* argv[]) {
         } 
         std::cout << str;
     } 
-    
-    std::cout << std::endl;
-    std::cout << "END OF PROGRAM" << std::endl;
-    return NO_ERROR;}
+    return NO_ERROR;
+}
 

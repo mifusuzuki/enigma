@@ -21,7 +21,7 @@ int print_error_message(int error_code) {
       return INVALID_INDEX;
 
     case 4:
-      std::cout << "[ERROR] non-numeric character" << std::endl;
+      std::cout << "Non-numeric character in plugboard file plugboard.pb" << std::endl;
       return NON_NUMERIC_CHARACTER;
 
     case 5:
