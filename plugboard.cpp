@@ -9,10 +9,10 @@
 #include "plugboard.h"
 #include "component.h"
 
-int PlugBoard::m_check_num_of_param(int index)
+int PlugBoard::m_check_odd_num_of_param(int index)
 {
-    /* check even num of parameter and less than 13 pairs */
-    if ((index)%2 || index > 26)
+    /* check for odd number of parameter inputs */
+    if (index%2)
     {
       /* there is odd number of elements */
       print_error_message(INCORRECT_NUMBER_OF_PLUGBOARD_PARAMETERS);
@@ -48,17 +48,25 @@ int PlugBoard::m_load_config()
     int index = 0;
     for (; index < m_raw_data.size(); index++)
     {
-        //std::cout << "checking " << m_raw_data[index] << std::endl;
+        /* check no greater than 26 inputs */
+        if (index > 26)
+        {
+            print_error_message(INCORRECT_NUMBER_OF_PLUGBOARD_PARAMETERS);
+            return INCORRECT_NUMBER_OF_PLUGBOARD_PARAMETERS;
+        }
+        /* check no non-numeric input */
         if (check_non_numeric(m_raw_data[index]) == NON_NUMERIC_CHARACTER) 
         {
             return NON_NUMERIC_CHARACTER;
         }
         /* convert string to int */
         int number = stoi(m_raw_data[index]);
+        /* check no invalid index */
         if (check_invalid_index(number) == INVALID_INDEX)
         {
             return INVALID_INDEX;
         }
+        /* check index not already configured */
         if (m_check_index_already_configured(prev, number) == IMPOSSIBLE_PLUGBOARD_CONFIGURATION)
         {
             return IMPOSSIBLE_PLUGBOARD_CONFIGURATION;
@@ -75,7 +83,8 @@ int PlugBoard::m_load_config()
         m_config[prev] = cur;
         m_config[cur] = prev;
     }
-    if (m_check_num_of_param(index) == INCORRECT_NUMBER_OF_PLUGBOARD_PARAMETERS)
+    /* check no odd number of parameters */
+    if (m_check_odd_num_of_param(index) == INCORRECT_NUMBER_OF_PLUGBOARD_PARAMETERS)
     {
         return INCORRECT_NUMBER_OF_PLUGBOARD_PARAMETERS;
     }
