@@ -9,51 +9,51 @@ int print_error_message(int error_code) {
   switch(error_code) {
                                                         
     case 1:
-      std::cerr << "[ERROR] insufficient number of parameters";
+      std::cerr << "[ERROR] insufficient number of parameters" << std::endl;
       return INSUFFICIENT_NUMBER_OF_PARAMETERS;
 
     case 2:
-      std::cerr << "[ERROR] invalid input character";
+      std::cerr << "[ERROR] invalid input character" << std::endl;
       return INVALID_INPUT_CHARACTER;
 
     case 3:
-      std::cerr << "[ERROR] invalid index";
+      std::cerr << "[ERROR] invalid index" << std::endl;
       return INVALID_INDEX;
 
     case 4:
-      std::cerr << "Non-numeric character in plugboard file plugboard.pb";
+      std::cerr << "[ERROR] non-numeric character" << std::endl;
       return NON_NUMERIC_CHARACTER;
 
     case 5:
-      std::cerr << "[ERROR] impossible plugboard configuration";
+      std::cerr << "[ERROR] impossible plugboard configuration" << std::endl;
       return IMPOSSIBLE_PLUGBOARD_CONFIGURATION;
 
     case 6:
-      std::cerr << "[ERROR] incorrect number of plugboard parameters";
+      std::cerr << "[ERROR] incorrect number of plugboard parameters" << std::endl;
       return INCORRECT_NUMBER_OF_PLUGBOARD_PARAMETERS;
 
     case 7:
-      std::cerr << "[ERROR] invalid rotor mapping";
+      std::cerr << "[ERROR] invalid rotor mapping" << std::endl;
       return INVALID_ROTOR_MAPPING;
 
     case 8:
-      std::cerr << "[ERROR] no rotor starting position";
+      std::cerr << "[ERROR] no rotor starting position" << std::endl;
       return NO_ROTOR_STARTING_POSITION;
 
     case 9:
-      std::cerr << "[ERROR] invalid reflector mapping";
+      std::cerr << "[ERROR] invalid reflector mapping" << std::endl;
       return INVALID_REFLECTOR_MAPPING;
 
     case 10:
-      std::cerr << "[ERROR] incorrect number of reflector parameters";
+      std::cerr << "[ERROR] incorrect number of reflector parameters" << std::endl;
       return INCORRECT_NUMBER_OF_REFLECTOR_PARAMETERS;
 
     case 11:
-      std::cerr << "[ERROR] issue opening configuration file";
+      std::cerr << "[ERROR] issue opening configuration file" << std::endl;
       return ERROR_OPENING_CONFIGURATION_FILE;
 
     default:
-      std::cerr << "[NO ERROR]";
+      std::cerr << "[NO ERROR]" << std::endl;
       return NO_ERROR;
   }
 }

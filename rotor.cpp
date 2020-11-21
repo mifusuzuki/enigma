@@ -22,7 +22,7 @@ Rotor::Rotor(int init_pos) : Component()
 int Rotor::m_check_index_already_configured(int val)
 {
     //std::cout << "m_check_index_already_configured called" <<std::endl;
-    for (int i=0; i<m_config.size(); i++)
+    for (unsigned int i=0; i<m_config.size(); i++)
     {
         if (m_config[i] == val)
         {
@@ -51,7 +51,7 @@ int Rotor::m_check_all_indexes_configured()
 
 int Rotor::m_load_config()
 {
-    int index = 0;
+    unsigned int index = 0;
     for (; index < m_raw_data.size(); index++)
     {
         /* first 26 elements - config */

@@ -40,7 +40,7 @@ int Enigma::m_setup_rotors(const std::vector<std::string>& rot_file, const std::
     std::string str;
     while (file >> str) 
     {
-      if (check_non_numeric(str) == NON_NUMERIC_CHARACTER) 
+        if (check_non_numeric(str) == NON_NUMERIC_CHARACTER) 
         {
             return NON_NUMERIC_CHARACTER;
         }
@@ -62,7 +62,7 @@ int Enigma::m_setup_rotors(const std::vector<std::string>& rot_file, const std::
     }
   
     /* set up rotors */
-    for (int i=0; i<rot_file.size(); i++)
+    for (unsigned int i=0; i<rot_file.size(); i++)
     {
         m_rotors.push_back(Rotor(rot_init_pos[i])); // create a rotor
         if (int error_code = m_rotors[i].m_read_file(rot_file[i]))
@@ -141,7 +141,7 @@ int Enigma::m_post_reflector_rotor_mechanism(int character)
 {
     /* go through rotors from left to right */
     int displaced_index;
-    for (int rot=0; rot<m_rotors.size(); rot++)
+    for (unsigned int rot=0; rot<m_rotors.size(); rot++)
     {
         int index = m_rotors[rot].m_get_position(character);
         displaced_index = (index+(26-m_rotors[rot].m_get_displacement()))%26;
@@ -151,10 +151,9 @@ int Enigma::m_post_reflector_rotor_mechanism(int character)
     return displaced_index;
 }
 
-
 int Enigma::m_encrypt_message(std::string& message)
 {
-    for (int chr=0; chr<message.size(); chr++)
+    for (unsigned int chr=0; chr<message.size(); chr++)
     {
         /* check invalid input char and convert char into lookup index if ok */
         if (check_invalid_input_character(message[chr]) == INVALID_INPUT_CHARACTER)

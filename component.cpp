@@ -59,7 +59,7 @@ int Component::m_get_char(int index)
 
 int Component::m_get_position(int character)
 {
-    for (int i=0; i<m_config.size(); i++)
+    for (unsigned int i=0; i<m_config.size(); i++)
     {
         if (m_config[i] == character)
         {
@@ -67,4 +67,5 @@ int Component::m_get_position(int character)
             return i;
         }
     }
+    return -1;
 }

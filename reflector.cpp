@@ -30,7 +30,7 @@ int Reflector::m_check_index_already_configured(int prev_val, int val)
         print_error_message(INVALID_REFLECTOR_MAPPING);
         return INVALID_REFLECTOR_MAPPING;
     }
-    for (int i=0; i<m_config.size(); i++)
+    for (unsigned int i=0; i<m_config.size(); i++)
     {
         if (m_config[i] == val)
         {
@@ -45,7 +45,7 @@ int Reflector::m_check_index_already_configured(int prev_val, int val)
 int Reflector::m_load_config()
 {
     int prev = -1; 
-    int index = 0;
+    unsigned int index = 0;
     for (; index < m_raw_data.size(); index++)
     {
         //std::cout << "checking " << m_raw_data[index] << std::endl;
