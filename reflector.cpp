@@ -9,18 +9,6 @@
 #include "reflector.h"
 #include "component.h"
 
-int Reflector::m_check_num_of_param(int index)
-{
-    /* check exactly 13 pairs */
-    if (index != 26)
-    {
-      /* there is odd number of elements */
-      print_error_message(INCORRECT_NUMBER_OF_REFLECTOR_PARAMETERS);
-      return INCORRECT_NUMBER_OF_REFLECTOR_PARAMETERS;
-    }
-    return NO_ERROR;
-}
-
 int Reflector::m_check_index_already_configured(int prev_val, int val)
 {
     //std::cout << "m_check_index_already_configured called" <<std::endl;
@@ -48,6 +36,12 @@ int Reflector::m_load_config()
     unsigned int index = 0;
     for (; index < m_raw_data.size(); index++)
     {
+        /* check no greater than 13 pairs */
+        if (index > 25)
+        {
+            print_error_message(INCORRECT_NUMBER_OF_REFLECTOR_PARAMETERS);
+            return INCORRECT_NUMBER_OF_REFLECTOR_PARAMETERS;
+        }
         //std::cout << "checking " << m_raw_data[index] << std::endl;
         if (check_non_numeric(m_raw_data[index]) == NON_NUMERIC_CHARACTER) 
         {
@@ -76,9 +70,5 @@ int Reflector::m_load_config()
         m_config[cur] = prev;
     }
 
-    if (m_check_num_of_param(index) == INCORRECT_NUMBER_OF_REFLECTOR_PARAMETERS)
-    {
-        return INCORRECT_NUMBER_OF_REFLECTOR_PARAMETERS;
-    }
     return NO_ERROR;
 }                  
