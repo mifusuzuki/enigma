@@ -55,7 +55,7 @@ int Enigma::m_setup_rotors(const std::vector<std::string>& rot_file, const std::
     file.close();
     
     /* check there is one position specified for every rotor */
-    if (rot_init_pos.size() != rot_file.size())
+    if (rot_init_pos.size() > rot_file.size())
     {
         print_error_message(NO_ROTOR_STARTING_POSITION);
         return NO_ROTOR_STARTING_POSITION; 
