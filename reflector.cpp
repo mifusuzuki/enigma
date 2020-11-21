@@ -36,7 +36,7 @@ int Reflector::m_load_config()
     unsigned int index = 0;
     for (; index < m_raw_data.size(); index++)
     {
-        /* check no greater than 13 pairs */
+        /* check no greater than 13 pairs of parameters */
         if (index > 25)
         {
             print_error_message(INCORRECT_NUMBER_OF_REFLECTOR_PARAMETERS);
@@ -68,6 +68,12 @@ int Reflector::m_load_config()
         /* save pair */
         m_config[prev] = cur;
         m_config[cur] = prev;
+    }
+    /* check no no less or greater than 13 pairs of parameters */
+    if (index != 25)
+    {
+        print_error_message(INCORRECT_NUMBER_OF_REFLECTOR_PARAMETERS);
+        return INCORRECT_NUMBER_OF_REFLECTOR_PARAMETERS;
     }
 
     return NO_ERROR;
