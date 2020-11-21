@@ -9,7 +9,7 @@ int print_error_message(int error_code) {
   switch(error_code) {
                                                         
     case 1:
-      std::cerr << "[ERROR] insufficient number of parameters" << std::endl;
+      std::cerr << "[ERROR] insufficient number of command line arguments" << std::endl;
       return INSUFFICIENT_NUMBER_OF_PARAMETERS;
 
     case 2:
@@ -21,7 +21,7 @@ int print_error_message(int error_code) {
       return INVALID_INDEX;
 
     case 4:
-      std::cerr << "[ERROR] non-numeric character" << std::endl;
+      std::cerr << "[ERROR] non-numeric character detected in file" << std::endl;
       return NON_NUMERIC_CHARACTER;
 
     case 5:
@@ -60,12 +60,14 @@ int print_error_message(int error_code) {
 
 int check_non_numeric(const std::string& str)
 {
-    //std::cout << "check_non_numeric called" << std::endl;
-    if (!str.find_first_not_of("-0123456789"))
-    {
-        /* non digit detected in string */
-        print_error_message(NON_NUMERIC_CHARACTER);
-        return NON_NUMERIC_CHARACTER;
+    for (unsigned int i=0; i<str.size(); i++)
+    {   
+        if (!isdigit(str[i]))
+        {
+            /* non digit detected in string */
+            print_error_message(NON_NUMERIC_CHARACTER);
+            return NON_NUMERIC_CHARACTER;
+        }
     }
     return NO_ERROR;
 }
