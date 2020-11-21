@@ -70,7 +70,7 @@ int Reflector::m_load_config()
         m_config[cur] = prev;
     }
     /* check no no less or greater than 13 pairs of parameters */
-    if (index != 25)
+    if (index != 26)
     {
         print_error_message(INCORRECT_NUMBER_OF_REFLECTOR_PARAMETERS);
         return INCORRECT_NUMBER_OF_REFLECTOR_PARAMETERS;
