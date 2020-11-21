@@ -21,11 +21,11 @@ int print_error_message(int error_code) {
       return INVALID_INDEX;
 
     case 4:
-      std::cout << "Non-numeric character in plugboard file plugboard.pb";
+      std::cerr << "Non-numeric character in plugboard file plugboard.pb";
       return NON_NUMERIC_CHARACTER;
 
     case 5:
-      std::cout << "[ERROR] impossible plugboard configuration";
+      std::cerr << "[ERROR] impossible plugboard configuration";
       return IMPOSSIBLE_PLUGBOARD_CONFIGURATION;
 
     case 6:
