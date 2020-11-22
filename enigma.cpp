@@ -19,11 +19,13 @@ int Enigma::m_setup_plugboard(const std::string& pb_file)
     /* read plugboard file */
     if (int error_code = m_plugboard.m_read_file(pb_file))
     {
+        std::cerr << "[CHECK] plugboard file" << std::endl;
         return error_code;
     }
     /* load plugboard config */
     if (int error_code = m_plugboard.m_load_config())
     {   
+        std::cerr << "[CHECK] plugboard file" << std::endl;
         return error_code;
     }   
     return NO_ERROR;
@@ -41,7 +43,7 @@ int Enigma::m_setup_rotors(const std::vector<std::string>& rot_file, const std::
     if (file.fail())
     {
         print_error_message(ERROR_OPENING_CONFIGURATION_FILE);
-        std::cerr << "(check rotor position file)" << std::endl;
+        std::cerr << "[CHECK] rotor position file" << std::endl;
         return ERROR_OPENING_CONFIGURATION_FILE; 
     }
     /* read position file */
@@ -51,7 +53,7 @@ int Enigma::m_setup_rotors(const std::vector<std::string>& rot_file, const std::
         /* check there is no non-numeric value in position file */
         if (check_non_numeric(str) == NON_NUMERIC_CHARACTER) 
         {
-            std::cerr << "(check rotor position file)" << std::endl;
+            std::cerr << "[CHECK] rotor position file" << std::endl;
             return NON_NUMERIC_CHARACTER;
         }
         /* convert string to int */
@@ -59,7 +61,7 @@ int Enigma::m_setup_rotors(const std::vector<std::string>& rot_file, const std::
         /* check there is no invalid index in file */
         if (check_invalid_index(number) == INVALID_INDEX)
         {
-            std::cerr << "(check rotor position file)" << std::endl;
+            std::cerr << "([CHECK] rotor position file" << std::endl;
             return INVALID_INDEX;
         }
         /* temporarily save the position */
@@ -71,7 +73,7 @@ int Enigma::m_setup_rotors(const std::vector<std::string>& rot_file, const std::
     if (rot_init_pos.size() < rot_file.size())
     {
         print_error_message(NO_ROTOR_STARTING_POSITION);
-        std::cerr << "(check rotor position file for too few number of positions)" << std::endl;
+        std::cerr << "[CHECK] rotor position file for too few number of positions" << std::endl;
         return NO_ROTOR_STARTING_POSITION; 
     }
   
@@ -83,13 +85,13 @@ int Enigma::m_setup_rotors(const std::vector<std::string>& rot_file, const std::
         /* read rotor file */
         if (int error_code = m_rotors[i].m_read_file(rot_file[i]))
         {
-            std::cerr << "(check "<< i << "th rotor file where 0th file = first file)" << std::endl;
+            std::cerr << "[CHECK] "<< i << "th rotor file where 0th file = first file)" << std::endl;
             return error_code;
         }
         /* load rotor configuration */
         if (int error_code = m_rotors[i].m_load_config())
         {   
-            std::cerr << "(check "<< i << "th rotor file where 0th file = first file)" << std::endl;
+            std::cerr << "[CHECK] "<< i << "th rotor file where 0th file = first file)" << std::endl;
             return error_code;
         }
     }
@@ -101,13 +103,13 @@ int Enigma::m_setup_reflector(const std::string& rf_file)
     /* read reflector file */
     if (int error_code = m_reflector.m_read_file(rf_file))
     {
-        std::cerr << "(check reflector file)" << std::endl;
+        std::cerr << "[CHECK] reflector file)" << std::endl;
         return error_code;
     }
     /* load reflector configuration */
     if (int error_code = m_reflector.m_load_config())
     {   
-        std::cerr << "(check reflector file)" << std::endl;
+        std::cerr << "[CHECK] reflector file)" << std::endl;
         return error_code;
     }  
     return NO_ERROR;
