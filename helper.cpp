@@ -13,11 +13,11 @@ int print_error_message(int error_code) {
       return INSUFFICIENT_NUMBER_OF_PARAMETERS;
 
     case 2:
-      std::cerr << "[ERROR] invalid input character" << std::endl;
+      std::cerr << "[ERROR] invalid input character (all input characters must be uppercase A-Z)" << std::endl;
       return INVALID_INPUT_CHARACTER;
 
     case 3:
-      std::cerr << "[ERROR] invalid index" << std::endl;
+      std::cerr << "[ERROR] invalid index detected in file" << std::endl;
       return INVALID_INDEX;
 
     case 4:
@@ -29,23 +29,23 @@ int print_error_message(int error_code) {
       return IMPOSSIBLE_PLUGBOARD_CONFIGURATION;
 
     case 6:
-      std::cerr << "[ERROR] incorrect number of plugboard parameters" << std::endl;
+      std::cerr << "[ERROR] incorrect number of mappings in plugboard file" << std::endl;
       return INCORRECT_NUMBER_OF_PLUGBOARD_PARAMETERS;
 
     case 7:
-      std::cerr << "[ERROR] invalid rotor mapping" << std::endl;
+      std::cerr << "[ERROR] invalid rotor mapping detected in file" << std::endl;
       return INVALID_ROTOR_MAPPING;
 
     case 8:
-      std::cerr << "[ERROR] no rotor starting position" << std::endl;
+      std::cerr << "[ERROR] insufficient number of rotor starting position" << std::endl;
       return NO_ROTOR_STARTING_POSITION;
 
     case 9:
-      std::cerr << "[ERROR] invalid reflector mapping" << std::endl;
+      std::cerr << "[ERROR] invalid reflector mapping detected in file" << std::endl;
       return INVALID_REFLECTOR_MAPPING;
 
     case 10:
-      std::cerr << "[ERROR] incorrect number of reflector parameters" << std::endl;
+      std::cerr << "[ERROR] incorrect number of mappings in reflector file" << std::endl;
       return INCORRECT_NUMBER_OF_REFLECTOR_PARAMETERS;
 
     case 11:

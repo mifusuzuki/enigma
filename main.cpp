@@ -21,7 +21,6 @@ int main(int argc, char* argv[]) {
     /* check if there are any rotors specified */
     if (argc > 4)
     {
-        std::cout << "there is a rotor" << std::endl;
         /* there are no rotors */
         enigma.m_confirm_enigma_has_rotor();
     }
