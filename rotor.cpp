@@ -126,12 +126,10 @@ bool Rotor::m_has_notch()
 
 void Rotor::m_turn_rotor()
 {
-    for (int i=0; i<2; i++)
+    m_displacement--;
+    if (m_displacement == -1)
     {
-        m_displacement--;
-        if (m_displacement == -1)
-        {
-            m_displacement = 25;
-        }
+        m_displacement = 25;
     }
+
 }

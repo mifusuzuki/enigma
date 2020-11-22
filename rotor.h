@@ -1,4 +1,4 @@
-/* Plugboard Header */
+/* Rotor Header */
 #ifndef ROTOR_H
 #define ROTOR_H
 

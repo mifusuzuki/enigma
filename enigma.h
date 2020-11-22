@@ -24,7 +24,7 @@ public:
     void m_stabilise_rotors(int last_rot);
     int m_pre_reflector_rotor_mechanism(int index);
     int m_post_reflector_rotor_mechanism(int character);
-    int m_encrypt_message(std::string& message);
+    int m_encrypt_message(char& character);
 private:
     bool m_has_rotor;
     PlugBoard m_plugboard;

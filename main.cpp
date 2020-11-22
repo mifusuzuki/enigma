@@ -55,14 +55,14 @@ int main(int argc, char* argv[]) {
     } 
 
     /* encrypt or decrypt message */
-    std::string str;
-    while (std::cin >> str)
+    char character;
+    while (std::cin >> character)
     {
-        if (int error_code = enigma.m_encrypt_message(str))
+        if (int error_code = enigma.m_encrypt_message(character))
         {
             return error_code;
         } 
-        std::cout << str;
+        std::cout << character;
     } 
     return NO_ERROR;
     }

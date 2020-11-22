@@ -157,38 +157,36 @@ int Enigma::m_post_reflector_rotor_mechanism(int character)
     return displaced_index;
 }
 
-int Enigma::m_encrypt_message(std::string& message)
+int Enigma::m_encrypt_message(char& character)
 {
-    for (unsigned int chr=0; chr<message.size(); chr++)
+    /* check invalid input char and convert char into lookup index if ok */
+    if (check_invalid_input_character(character) == INVALID_INPUT_CHARACTER)
     {
-        /* check invalid input char and convert char into lookup index if ok */
-        if (check_invalid_input_character(message[chr]) == INVALID_INPUT_CHARACTER)
-        {
-            return INVALID_INPUT_CHARACTER;
-        }
-        int index = (int)message[chr]-65;
-
-        /* thorugh plugboard */
-        index = m_plugboard.m_get_char(index);
-        //std::cout << "post plugbpard index = " << index << std::endl;
-        /* through rotors if there is any */
-        if (m_has_one_or_more_rotors())
-        {
-            index = m_pre_reflector_rotor_mechanism(index);
-        }
-        /* reflected on reflector */
-        index = m_reflector.m_get_char(index);
-        //std::cout << "post reflector index = " << index << std::endl;
-        /* back through rotors if there is any */
-        if (m_has_one_or_more_rotors())
-        {
-            index = m_post_reflector_rotor_mechanism(index);
-        }
-        /* back through plugboard */
-        index = m_plugboard.m_get_char(index);
-        //std::cout << "post plugbpard index (post-reflector) = " << index << std::endl;
-        /* update the character */
-        message[chr] = (char)(index+65);
+        return INVALID_INPUT_CHARACTER;
     }
+    int index = (int)character-65;
+
+    /* thorugh plugboard */
+    index = m_plugboard.m_get_char(index);
+    //std::cout << "post plugbpard index = " << index << std::endl;
+    /* through rotors if there is any */
+    if (m_has_one_or_more_rotors())
+    {
+        index = m_pre_reflector_rotor_mechanism(index);
+    }
+    /* reflected on reflector */
+    index = m_reflector.m_get_char(index);
+    //std::cout << "post reflector index = " << index << std::endl;
+    /* back through rotors if there is any */
+    if (m_has_one_or_more_rotors())
+    {
+        index = m_post_reflector_rotor_mechanism(index);
+    }
+    /* back through plugboard */
+    index = m_plugboard.m_get_char(index);
+    //std::cout << "post plugbpard index (post-reflector) = " << index << std::endl;
+    /* update the character */
+    character = (char)(index+65);
+
     return NO_ERROR;
 }
