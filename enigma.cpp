@@ -85,13 +85,13 @@ int Enigma::m_setup_rotors(const std::vector<std::string>& rot_file, const std::
         /* read rotor file */
         if (int error_code = m_rotors[i].m_read_file(rot_file[i]))
         {
-            std::cerr << "[CHECK] "<< i << "th rotor file where 0th file = first file" << std::endl;
+            std::cerr << "[CHECK] "<< i << "th rotor file" << std::endl;
             return error_code;
         }
         /* load rotor configuration */
         if (int error_code = m_rotors[i].m_load_config())
         {   
-            std::cerr << "[CHECK] "<< i << "th rotor file where 0th file = first file" << std::endl;
+            std::cerr << "[CHECK] "<< i << "th rotor file" << std::endl;
             return error_code;
         }
     }
