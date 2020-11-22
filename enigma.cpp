@@ -7,6 +7,12 @@
 #include "errors.h"
 #include "enigma.h"
 
+Enigma::Enigma()
+{
+    /* enigma has no rotors default unless specified otherwise */
+    m_has_rotor = false;
+}
+
 int Enigma::m_setup_plugboard(const std::string& pb_file)
 {
     if (int error_code = m_plugboard.m_read_file(pb_file))
@@ -165,13 +171,19 @@ int Enigma::m_encrypt_message(std::string& message)
         /* thorugh plugboard */
         index = m_plugboard.m_get_char(index);
         //std::cout << "post plugbpard index = " << index << std::endl;
-        /* through rotors */
-        index = m_pre_reflector_rotor_mechanism(index);
+        /* through rotors if there is any */
+        if (m_has_one_or_more_rotors())
+        {
+            index = m_pre_reflector_rotor_mechanism(index);
+        }
         /* reflected on reflector */
         index = m_reflector.m_get_char(index);
         //std::cout << "post reflector index = " << index << std::endl;
-        /* back through rotors */
-        index = m_post_reflector_rotor_mechanism(index);
+        /* back through rotors if there is any */
+        if (m_has_one_or_more_rotors())
+        {
+            index = m_post_reflector_rotor_mechanism(index);
+        }
         /* back through plugboard */
         index = m_plugboard.m_get_char(index);
         //std::cout << "post plugbpard index (post-reflector) = " << index << std::endl;

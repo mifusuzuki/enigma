@@ -15,27 +15,40 @@ int main(int argc, char* argv[]) {
         return INSUFFICIENT_NUMBER_OF_PARAMETERS;
     }
 
-    /* save rotor paths into an array */
-    std::vector<std::string> rot_files;
-    for (int i = 3; i < argc - 1; i++) {
-        rot_files.push_back(argv[i]);
-    }
-
     /* create an enigma */
     Enigma enigma;
-    
+
+    /* check if there are any rotors specified */
+    if (argc > 4)
+    {
+        std::cout << "there is a rotor" << std::endl;
+        /* there are no rotors */
+        enigma.m_confirm_enigma_has_rotor();
+    }
+
+    /* save rotor paths into an array if there are any */
+    std::vector<std::string> rot_files;
+    if (enigma.m_has_one_or_more_rotors())
+    {
+        for (int i = 3; i < argc - 1; i++) {
+            rot_files.push_back(argv[i]);
+        }
+    }
+
     /* setup plugboard */ 
     if (int error_code = enigma.m_setup_plugboard(argv[1]))
     {
         return error_code;
     }
    
-    /* set up rotor */
-    if (int error_code = enigma.m_setup_rotors(rot_files, argv[argc - 1]))
+    /* set up rotor if there are any */
+    if (enigma.m_has_one_or_more_rotors())
     {
-        return error_code;
+        if (int error_code = enigma.m_setup_rotors(rot_files, argv[argc - 1]))
+        {
+            return error_code;
+        }
     }
-    
     /* set up reflector */ 
     if (int error_code = enigma.m_setup_reflector(argv[2]))
     {
