@@ -16,7 +16,7 @@ int print_error_message(int error_code) {
       return INSUFFICIENT_NUMBER_OF_PARAMETERS;
 
     case 2:
-      std::cerr << "[ERROR] invalid input character (all input characters must be uppercase A-Z) ";
+      std::cerr << "[ERROR] invalid input character (only A-Z allowed) - ";
       return INVALID_INPUT_CHARACTER;
 
     case 3:
@@ -95,7 +95,7 @@ int check_invalid_input_character(char character)
     {
       /* invalid input parameter detected */
       print_error_message(INVALID_INPUT_CHARACTER);
-      std::cerr << "(" << character << " is not a valid input character)" << std::endl;
+      std::cerr << character << " is not a valid input character" << std::endl;
       return INVALID_INPUT_CHARACTER;
     }
     return NO_ERROR;

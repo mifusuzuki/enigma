@@ -73,7 +73,7 @@ int Enigma::m_setup_rotors(const std::vector<std::string>& rot_file, const std::
     if (rot_init_pos.size() < rot_file.size())
     {
         print_error_message(NO_ROTOR_STARTING_POSITION);
-        std::cerr << "[CHECK] rotor position file for too few number of positions" << std::endl;
+        std::cerr << "[CHECK] rotor position file" << std::endl;
         return NO_ROTOR_STARTING_POSITION; 
     }
   
