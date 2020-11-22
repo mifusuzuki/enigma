@@ -2,11 +2,14 @@
 
 #include "errors.h"
 #include "helper.h"
+
 #include <iostream>
 
 int print_error_message(int error_code) {
 
-  switch(error_code) {
+    /* return messages and error codes depending ont the input code */
+
+    switch(error_code) {
                                                         
     case 1:
       std::cerr << "[ERROR] insufficient number of command line arguments" << std::endl;
@@ -60,6 +63,7 @@ int print_error_message(int error_code) {
 
 int check_non_numeric(const std::string& str)
 {
+    /* go through the string and check if there is any non numeric characyer */
     for (unsigned int i=0; i<str.size(); i++)
     {   
         if (!isdigit(str[i]))
@@ -74,7 +78,7 @@ int check_non_numeric(const std::string& str)
 
 int check_invalid_index(int val)
 {
-    //std::cout << "check_invalid_index called" << std::endl;
+    /* check if the given val is within 0 to 25 inclusive */
     if (!(val >= 0 && val <= 25))
     {
       /* invalid input parameter detected */
@@ -86,7 +90,7 @@ int check_invalid_index(int val)
 
 int check_invalid_input_character(char character)
 {
-    //std::cout << "check_invalid_input_character called" << std::endl;
+    /* check if the given val is within A to Z inclusive */
     if (!(character >= 'A' && character <= 'Z'))
     {
       /* invalid input parameter detected */

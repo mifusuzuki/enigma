@@ -1,18 +1,19 @@
 /* Rotor Implementation*/
-#include <iostream>
+#include "rotor.h"
+
+#include "component.h"
+#include "errors.h"
+#include "helper.h"
+
+#include <algorithm>
 #include <fstream>
+#include <iostream>
 #include <string>
 #include <vector>
-#include <algorithm>
-
-#include "helper.h"
-#include "errors.h"
-#include "rotor.h"
-#include "component.h"
 
 Rotor::Rotor(int init_pos) : Component()
 {   
-    /* set the rotor's default config */
+    /* set rotor's starting position */
     m_displacement = init_pos;
 
     /* default notch array */
@@ -21,7 +22,7 @@ Rotor::Rotor(int init_pos) : Component()
 
 int Rotor::m_check_index_already_configured(int val)
 {
-    //std::cout << "m_check_index_already_configured called" <<std::endl;
+     /* check if index maps to more than one other index */
     for (unsigned int i=0; i<m_config.size(); i++)
     {
         if (m_config[i] == val)
@@ -36,9 +37,10 @@ int Rotor::m_check_index_already_configured(int val)
 
 int Rotor::m_check_all_indexes_configured()
 {
-    //std::cout << "m_check_all_indexes_configured called" <<std::endl;
+    /* check there is no yet-to-be configured indexes */
     for (int i=0; i<26; i++)
     {
+        /* go through m_ config from start to end and check all 0-25 indexes are found */
         if (std::find(m_config.begin(), m_config.end(), i) == m_config.end())
         {
             /* found index not yet configured */
@@ -51,24 +53,27 @@ int Rotor::m_check_all_indexes_configured()
 
 int Rotor::m_load_config()
 {
+    /* go through m_raw_data and carry out necessary checks one by one and store it in m_config */
     unsigned int index = 0;
     for (; index < m_raw_data.size(); index++)
     {
-        /* first 26 elements - config */
+        /* first 26 elements - encryption mapping */
         
         if (index < m_config.size())
         {
-            //std::cout << "checking " << m_raw_data[index] << std::endl;
+            /* check no non-numeric input */
             if (check_non_numeric(m_raw_data[index]) == NON_NUMERIC_CHARACTER) 
             {
             return NON_NUMERIC_CHARACTER;
             }
             /* convert string to int */
             int number = stoi(m_raw_data[index]);
+            /* check no invalid index */
             if (check_invalid_index(number) == INVALID_INDEX)
             {
             return INVALID_INDEX;
             }
+            /* check index not already configured */
             if (m_check_index_already_configured(number) == INVALID_ROTOR_MAPPING)
             {
                 return INVALID_ROTOR_MAPPING;
@@ -80,13 +85,14 @@ int Rotor::m_load_config()
 
         /* remainder after the first 26 elements - notches */
 
-        //std::cout << "checking " << m_raw_data[index] << std::endl;
+        /* check no non-numeric input */
         if (check_non_numeric(m_raw_data[index]) == NON_NUMERIC_CHARACTER) 
         {
         return NON_NUMERIC_CHARACTER;
         }
         /* convert string to int */
         int number = stoi(m_raw_data[index]);
+        /* check no invalid index */
         if (check_invalid_index(number) == INVALID_INDEX)
         {
         return INVALID_INDEX;
@@ -116,6 +122,7 @@ void Rotor::m_print_notches()
 
 bool Rotor::m_has_notch()
 {
+    /* check if there is a notch */
     if (m_notches[m_displacement] == 1)
     {
         /* there is a notch */
@@ -127,8 +134,10 @@ bool Rotor::m_has_notch()
 void Rotor::m_turn_rotor()
 {
     m_displacement--;
+    /* if displacement completes are whole cycle*/
     if (m_displacement == -1)
     {
+        /* update displacement */
         m_displacement = 25;
     }
 

@@ -1,11 +1,12 @@
 /* Enigma Implementation*/
-#include <iostream>
-#include <fstream>
-#include <vector>
-
-#include "helper.h"
-#include "errors.h"
 #include "enigma.h"
+
+#include "errors.h"
+#include "helper.h"
+
+#include <fstream>
+#include <iostream>
+#include <vector>
 
 Enigma::Enigma()
 {
@@ -15,52 +16,55 @@ Enigma::Enigma()
 
 int Enigma::m_setup_plugboard(const std::string& pb_file)
 {
+    /* read plugboard file */
     if (int error_code = m_plugboard.m_read_file(pb_file))
     {
         return error_code;
     }
+    /* load plugboard config */
     if (int error_code = m_plugboard.m_load_config())
     {   
         return error_code;
-    }
-    //std::cout << std::endl;
-    //std::cout << "loaded plugboard config" << std::endl;
-    //m_plugboard.m_print_config();   
+    }   
     return NO_ERROR;
 }
 
 int Enigma::m_setup_rotors(const std::vector<std::string>& rot_file, const std::string& pos_file)
 {
-    /* get rotor positions */
+    /* array to temporary store initial positions of each rotor */
     std::vector<int> rot_init_pos;
+
+    /* open position file */
     std::ifstream file;
     file.open(pos_file);
-    /* check issue opening pos_file*/
-    //std::cout << "opening pos_file = " << pos_file << std::endl;
+    /* check issue opening position file */
     if (file.fail())
     {
         print_error_message(ERROR_OPENING_CONFIGURATION_FILE);
         return ERROR_OPENING_CONFIGURATION_FILE; 
     }
-    /* read pos_file */
+    /* read position file */
     std::string str;
     while (file >> str) 
     {
+        /* check there is no non-numeric value in position file */
         if (check_non_numeric(str) == NON_NUMERIC_CHARACTER) 
         {
             return NON_NUMERIC_CHARACTER;
         }
         /* convert string to int */
         int number = stoi(str);
+        /* check there is no invalid index in file */
         if (check_invalid_index(number) == INVALID_INDEX)
         {
             return INVALID_INDEX;
         }
+        /* temporarily save the position */
         rot_init_pos.push_back(number);
     }
     file.close();
     
-    /* check there is one position specified for every rotor */
+    /* check there is enough positions specified for the number of rotors present */
     if (rot_init_pos.size() < rot_file.size())
     {
         print_error_message(NO_ROTOR_STARTING_POSITION);
@@ -70,54 +74,47 @@ int Enigma::m_setup_rotors(const std::vector<std::string>& rot_file, const std::
     /* set up rotors */
     for (unsigned int i=0; i<rot_file.size(); i++)
     {
-        m_rotors.push_back(Rotor(rot_init_pos[i])); // create a rotor
+        /* create a rotor with given initial position and store it in rotor array i.e. m_rotors */
+        m_rotors.push_back(Rotor(rot_init_pos[i])); 
+        /* read rotor file */
         if (int error_code = m_rotors[i].m_read_file(rot_file[i]))
         {
             return error_code;
         }
+        /* load rotor configuration */
         if (int error_code = m_rotors[i].m_load_config())
         {   
             return error_code;
         }
-        //std::cout << std::endl;
-        //std::cout << "loaded rotor " << i+1 << " config" << std::endl;
-        //std::cout << "initial position = " << m_rotors[i].m_get_displacement() << std::endl;
-        //std::cout << "config = ";
-        //m_rotors[i].m_print_config();   
-        //std::cout << "notches = ";
-        //m_rotors[i].m_print_notches();  
     }
     return NO_ERROR;
 }
 
 int Enigma::m_setup_reflector(const std::string& rf_file)
 {
+    /* read reflector file */
     if (int error_code = m_reflector.m_read_file(rf_file))
     {
         return error_code;
     }
+    /* load reflector configuration */
     if (int error_code = m_reflector.m_load_config())
     {   
         return error_code;
-    }
-    //std::cout << std::endl;
-    //std::cout << "loaded reflector config" << std::endl;
-    //m_reflector.m_print_config();   
+    }  
     return NO_ERROR;
-
 }
 
 void Enigma::m_stabilise_rotors(int last_rot)
 {
-    /* stabilised all rotors */
+    /* base case - stabilised all rotors */
     if (last_rot == 0)
     {
         return;
     }
-    /* notch found */
+    /* check if the rotor has notch at the top */
     if (m_rotors[last_rot].m_has_notch())
     {
-        //std::cout << "there is a notch on " << last_rot+1 << " so we and turned rotor " << last_rot << std::endl;
         /* turn the rotor to its left */
         m_rotors[last_rot-1].m_turn_rotor();
         /* recursive call - stabilise again */
@@ -129,16 +126,16 @@ void Enigma::m_stabilise_rotors(int last_rot)
 
 int Enigma::m_pre_reflector_rotor_mechanism(int index)
 {
-    /* turn right most rotor */
+    /* turn the right most rotor */
     m_rotors[m_rotors.size()-1].m_turn_rotor();
-    /* adjust rotors according to the notches */
+    /* adjust rotors according to the notches and stabilise them */
     m_stabilise_rotors(m_rotors.size()-1);
     /* go through rotors from right to left */
     for (int rot=m_rotors.size()-1; rot>=0; rot--)
     {
+        /* combine given index and rotor displacement and find char residing in that index */
         int displaced_index = (index + m_rotors[rot].m_get_displacement())%26;
         index = m_rotors[rot].m_get_char(displaced_index);
-        //std::cout << "post rotor index (pre-reflector) = " << index << std::endl;
     }
     return index;
 }
@@ -149,9 +146,9 @@ int Enigma::m_post_reflector_rotor_mechanism(int character)
     int displaced_index;
     for (unsigned int rot=0; rot<m_rotors.size(); rot++)
     {
+        /* find the position of the target character and find its displaced index */
         int index = m_rotors[rot].m_get_position(character);
         displaced_index = (index+(26-m_rotors[rot].m_get_displacement()))%26;
-        //std::cout << "post rotor index (post-reflector) = " << displaced_index << std::endl;
         character = displaced_index;
     }
     return displaced_index;
@@ -159,34 +156,32 @@ int Enigma::m_post_reflector_rotor_mechanism(int character)
 
 int Enigma::m_encrypt_message(char& character)
 {
-    /* check invalid input char and convert char into lookup index if ok */
+    /* check no invalid character */
     if (check_invalid_input_character(character) == INVALID_INPUT_CHARACTER)
     {
         return INVALID_INPUT_CHARACTER;
     }
+    /* convert character to int */
     int index = (int)character-65;
 
-    /* thorugh plugboard */
+    /* plugboard encryption */
     index = m_plugboard.m_get_char(index);
-    //std::cout << "post plugbpard index = " << index << std::endl;
-    /* through rotors if there is any */
+    /* rotor encryption if there is any rotor */
     if (m_has_one_or_more_rotors())
     {
         index = m_pre_reflector_rotor_mechanism(index);
     }
-    /* reflected on reflector */
+    /* reflector encryption */
     index = m_reflector.m_get_char(index);
-    //std::cout << "post reflector index = " << index << std::endl;
-    /* back through rotors if there is any */
+    /* rotor encryption (post reflector) if there is any rotor */
     if (m_has_one_or_more_rotors())
     {
         index = m_post_reflector_rotor_mechanism(index);
     }
-    /* back through plugboard */
+    /* plugboard encryption (post reflector) */
     index = m_plugboard.m_get_char(index);
-    //std::cout << "post plugbpard index (post-reflector) = " << index << std::endl;
-    /* update the character */
-    character = (char)(index+65);
 
+    /* update the character to the encrypted one */
+    character = (char)(index+65);
     return NO_ERROR;
 }

@@ -1,11 +1,13 @@
-#include <iostream>
+/* main.cpp for enigma */
+
+#include "enigma.h"
+#include "errors.h"
+#include "helper.h"
+
 #include <fstream>
+#include <iostream>
 #include <string>
 #include <vector>
-
-#include "helper.h"
-#include "errors.h"
-#include "enigma.h"
 
 int main(int argc, char* argv[]) {
 
