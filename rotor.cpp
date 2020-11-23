@@ -5,7 +5,7 @@
 #include "errors.h"
 #include "helper.h"
 
-#include <algorithm>
+#include<algorithm>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -133,12 +133,5 @@ bool Rotor::m_has_notch()
 
 void Rotor::m_turn_rotor()
 {
-    m_displacement--;
-    /* if displacement completes are whole cycle*/
-    if (m_displacement == -1)
-    {
-        /* update displacement */
-        m_displacement = 25;
-    }
-
+    m_displacement = (m_displacement + 1) % 26;
 }

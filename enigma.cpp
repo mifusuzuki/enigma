@@ -19,13 +19,11 @@ int Enigma::m_setup_plugboard(const std::string& pb_file)
     /* read plugboard file */
     if (int error_code = m_plugboard.m_read_file(pb_file))
     {
-        std::cerr << "[CHECK] plugboard file" << std::endl;
         return error_code;
     }
     /* load plugboard config */
     if (int error_code = m_plugboard.m_load_config())
     {   
-        std::cerr << "[CHECK] plugboard file" << std::endl;
         return error_code;
     }   
     return NO_ERROR;
@@ -43,7 +41,6 @@ int Enigma::m_setup_rotors(const std::vector<std::string>& rot_file, const std::
     if (file.fail())
     {
         print_error_message(ERROR_OPENING_CONFIGURATION_FILE);
-        std::cerr << "[CHECK] rotor position file" << std::endl;
         return ERROR_OPENING_CONFIGURATION_FILE; 
     }
     /* read position file */
@@ -53,7 +50,6 @@ int Enigma::m_setup_rotors(const std::vector<std::string>& rot_file, const std::
         /* check there is no non-numeric value in position file */
         if (check_non_numeric(str) == NON_NUMERIC_CHARACTER) 
         {
-            std::cerr << "[CHECK] rotor position file" << std::endl;
             return NON_NUMERIC_CHARACTER;
         }
         /* convert string to int */
@@ -61,7 +57,6 @@ int Enigma::m_setup_rotors(const std::vector<std::string>& rot_file, const std::
         /* check there is no invalid index in file */
         if (check_invalid_index(number) == INVALID_INDEX)
         {
-            std::cerr << "([CHECK] rotor position file" << std::endl;
             return INVALID_INDEX;
         }
         /* temporarily save the position */
@@ -73,7 +68,6 @@ int Enigma::m_setup_rotors(const std::vector<std::string>& rot_file, const std::
     if (rot_init_pos.size() < rot_file.size())
     {
         print_error_message(NO_ROTOR_STARTING_POSITION);
-        std::cerr << "[CHECK] rotor position file" << std::endl;
         return NO_ROTOR_STARTING_POSITION; 
     }
   
@@ -85,13 +79,11 @@ int Enigma::m_setup_rotors(const std::vector<std::string>& rot_file, const std::
         /* read rotor file */
         if (int error_code = m_rotors[i].m_read_file(rot_file[i]))
         {
-            std::cerr << "[CHECK] "<< i << "th rotor file" << std::endl;
             return error_code;
         }
         /* load rotor configuration */
         if (int error_code = m_rotors[i].m_load_config())
         {   
-            std::cerr << "[CHECK] "<< i << "th rotor file" << std::endl;
             return error_code;
         }
     }
@@ -103,13 +95,11 @@ int Enigma::m_setup_reflector(const std::string& rf_file)
     /* read reflector file */
     if (int error_code = m_reflector.m_read_file(rf_file))
     {
-        std::cerr << "[CHECK] reflector file" << std::endl;
         return error_code;
     }
     /* load reflector configuration */
     if (int error_code = m_reflector.m_load_config())
     {   
-        std::cerr << "[CHECK] reflector file" << std::endl;
         return error_code;
     }  
     return NO_ERROR;
@@ -136,16 +126,24 @@ void Enigma::m_stabilise_rotors(int last_rot)
 
 int Enigma::m_pre_reflector_rotor_mechanism(int index)
 {
+    /* adjust rotors according to the notches and stabilise them */
+    m_stabilise_rotors(m_rotors.size()-1);
     /* turn the right most rotor */
     m_rotors[m_rotors.size()-1].m_turn_rotor();
     /* adjust rotors according to the notches and stabilise them */
     m_stabilise_rotors(m_rotors.size()-1);
     /* go through rotors from right to left */
+    int character;
     for (int rot=m_rotors.size()-1; rot>=0; rot--)
     {
-        /* combine given index and rotor displacement and find char residing in that index */
-        int displaced_index = (index + m_rotors[rot].m_get_displacement())%26;
-        index = m_rotors[rot].m_get_char(displaced_index);
+        /* find current position of the rotor */
+        int displacement = m_rotors[rot].m_get_displacement();
+        /* update the index to a shifted one */
+        int index = (index + displacement) % 26;
+        /* find the character at the index */
+        character = m_rotors[rot].m_get_char(index);
+        /* update the character to a shifted one */
+        character = (character - displacement + 26) % 26;
     }
     return index;
 }
@@ -153,15 +151,19 @@ int Enigma::m_pre_reflector_rotor_mechanism(int index)
 int Enigma::m_post_reflector_rotor_mechanism(int character)
 {
     /* go through rotors from left to right */
-    int displaced_index;
+    int index;
     for (unsigned int rot=0; rot<m_rotors.size(); rot++)
     {
-        /* find the position of the target character and find its displaced index */
-        int index = m_rotors[rot].m_get_position(character);
-        displaced_index = (index+(26-m_rotors[rot].m_get_displacement()))%26;
-        character = displaced_index;
+        /* find current position of the rotor */
+        int displacement = m_rotors[rot].m_get_displacement();
+        /* update the character to a shifted one */
+        character = (character + displacement) % 26;
+        /* find the updated character's position*/
+        index = m_rotors[rot].m_get_position(character);
+        /* update the index to a shifted one */
+        index = (index - displacement + 26) % 26;
     }
-    return displaced_index;
+    return index;
 }
 
 int Enigma::m_encrypt_message(char& character)
@@ -174,21 +176,25 @@ int Enigma::m_encrypt_message(char& character)
     /* convert character to int */
     int index = (int)character-65;
 
-    /* plugboard encryption */
+    /* PLUGBOARD ENCRYPTION */
     index = m_plugboard.m_get_char(index);
-    /* rotor encryption if there is any rotor */
+
+    /* ROTOR ENCRYPTION */
     if (m_has_one_or_more_rotors())
     {
         index = m_pre_reflector_rotor_mechanism(index);
     }
-    /* reflector encryption */
+
+    /* REFLECTOR ENCRYPTION */
     index = m_reflector.m_get_char(index);
-    /* rotor encryption (post reflector) if there is any rotor */
+
+    /* ROTOR ENCRYPTION */
     if (m_has_one_or_more_rotors())
     {
         index = m_post_reflector_rotor_mechanism(index);
     }
-    /* plugboard encryption (post reflector) */
+
+    /* PLUGBOARD ENCRYPTION */
     index = m_plugboard.m_get_char(index);
 
     /* update the character to the encrypted one */
